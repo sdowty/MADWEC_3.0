@@ -1,4 +1,6 @@
 Huntington Ingalls - REMUS 100 information:
   https://tsd.huntingtoningalls.com/capabilities/unmanned-systems/unmanned-underwater-vehicles/remus100variants/remus100h/
   
-Others
+In-Lab Winch by A.G.O. Environmental Electronics
+  http://www.agoenvironmental.com/products/csw-series-winches-medium-marine-winches/csw-6
+
