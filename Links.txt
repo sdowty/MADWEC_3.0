@@ -4,3 +4,5 @@ Huntington Ingalls - REMUS 100 information:
 In-Lab Winch by A.G.O. Environmental Electronics
   http://www.agoenvironmental.com/products/csw-series-winches-medium-marine-winches/csw-6
 
+Low-Pass Filter Help
+  https://www.electronics-tutorials.ws/filter/filter_2.html 
