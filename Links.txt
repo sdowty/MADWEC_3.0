@@ -6,3 +6,7 @@ In-Lab Winch by A.G.O. Environmental Electronics
 
 Low-Pass Filter Help
   https://www.electronics-tutorials.ws/filter/filter_2.html 
+
+Oscillator Help
+  https://www.tutorialspoint.com/linear_integrated_circuits_applications/linear_integrated_circuits_applications_sinusoidal_oscillators.htm
+  
