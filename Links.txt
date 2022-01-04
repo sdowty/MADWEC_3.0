@@ -13,3 +13,6 @@ Oscillator Help
 Distance Sensor Links
     Sharp GP2Y0A02YK0F
         https://forums.ni.com/t5/Example-Code/Measuring-Distance-with-myDAQ-and-Sharp-Infrared-Proximity/ta-p/3996488
+
+    Acuity AR1000
+        https://www.acuitylaser.com/product/laser-sensors/long-range-sensors/ar1000-laser-distance-sensor/
