@@ -16,3 +16,10 @@ Distance Sensor Links
 
     Acuity AR1000
         https://www.acuitylaser.com/product/laser-sensors/long-range-sensors/ar1000-laser-distance-sensor/
+
+NI PC-Based DAQ
+    https://www.ni.com/en-us/shop/pc-based-measurement-and-control-system.html
+    
+    USB to RS-232 Adapter
+      https://www.ni.com/en-us/support/model.usb-232.html
+      https://www.ni.com/en-us/support/model.usb-232-4.html
