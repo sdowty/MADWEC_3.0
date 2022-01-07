@@ -20,6 +20,9 @@ Distance Sensor Links
     
     Adafruit Garmin LIDAR-Lite Optical Distance LED Sensor - V4
         https://www.adafruit.com/product/4441?gclid=Cj0KCQiAw9qOBhC-ARIsAG-rdn4yrdZoD4Ec5Ln7rAegTNpjyTXrNnnXnf7PntbNU1TJ8fXhpvWHt0kaAm67EALw_wcB
+        
+    Adafruit VL53L0X - Time of Flight Sensor
+        https://www.adafruit.com/product/3317
 
 NI PC-Based DAQ
     https://www.ni.com/en-us/shop/pc-based-measurement-and-control-system.html
