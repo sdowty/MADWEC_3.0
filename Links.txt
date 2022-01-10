@@ -25,8 +25,11 @@ Distance Sensor Links
     Adafruit VL53L0X - Time of Flight Sensor
         https://www.adafruit.com/product/3317
         
-    Rasberry Pi Ultrasonic Sensor
+    Rasberry Pi Ultrasonic Sensor - HC-SR04
         https://www.adafruit.com/product/3942
+       
+Arduino IDE Help
+    https://www.arduino.cc/en/Guide/Troubleshooting
 
 NI PC-Based DAQ
     https://www.ni.com/en-us/shop/pc-based-measurement-and-control-system.html
