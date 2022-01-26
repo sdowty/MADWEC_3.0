@@ -17,6 +17,9 @@ A = transpose(ratioDT1);
 B = transpose(ratioDT2);
 C = transpose(ratioDT3);
 tCount = transpose([1:1:23]);
-header = {'test #' 'Ratio 1' 'Ratio 2' 'Ratio 3'}
-table(header, A, B, C,)
-compare = [tCount A B C]
+%header = {'test #' 'Ratio 1' 'Ratio 2' 'Ratio 3'};
+%table( A, B, C,header)
+compare = [ tCount A B C];
+
+
+
