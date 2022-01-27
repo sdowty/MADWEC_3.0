@@ -1,0 +1,17 @@
+
+%setting arduino to port output from pc 
+AU = arduino('com7','uno', 'Libraries', 'Ultrasonic' ); 
+% Creating Ultrasonic sensor with trigger pin D2 & Echo pin D3
+sensor = ultrasonic(AU,  'D13', 'D12'); 
+
+% Measuring Time 
+t = readTravelTime(sensor); 
+distCM = (0.340.*t)/2; 
+sprintf('Current Distance in cm: %.2f \n', distCM)
+
+% Measuring Distance 
+DistRead = readDistance(sensor); 
+sprintf('Distance in cm: %.2f \n', DistRead)
+
+clear sensor ; 
+clear a;
