@@ -54,7 +54,7 @@ lh = area(x,y);
     
 axis([-points*data_period, 0, 0, 255]);
 shg; %brings the figure to the front of all other windows
-%waitTime = 5;   
+waitTime = 5;   
 key = get(gcf,'CurrentKey'); %get the key currently pressed
 while ( strcmp(key, 's') == 0) %this while will stop if you press the "s" key
     key = get(gcf,'CurrentKey'); %get the key currently pressed
@@ -67,13 +67,13 @@ while ( strcmp(key, 's') == 0) %this while will stop if you press the "s" key
     for k = 1:1:points-1
        y(k) = y(k+1);
        
-     
+        
     end
     
     %read and place value in the right of the graph
     y(points) = fread(serialMonitor,1);
     
-   % Tx = ((1:length(y(points)))-1).*dT; 
+    Tx = ((1:length(y(points)))-1).*dT; 
     
     
     %save the value in distance without a ";" so we can read the number in
@@ -83,20 +83,16 @@ while ( strcmp(key, 's') == 0) %this while will stop if you press the "s" key
     % edit just the data for the y axis on the graph. This is much, much
     % faster than ploting everything over and over again
    % axis([0,(toc), 0, 255]);
-    set(lh, 'YData',y);  
+    %set(lh, 'YData',y);  
    % set(Tx, 'YData',y);
-  
+    axh = gca;    % current axis
+    axh.Ygrid = 'on';
     xlabel('time');
     ylabel('distance in cm');
+    legend('Distance Read');
     
-       
-       
-       
-       
-       
-       
-       
-   end
+   stop = false; 
+   waitTime 
      
   
     %request the plot to be updated
