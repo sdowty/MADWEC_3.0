@@ -78,32 +78,29 @@ title('Total Recorded Data');
 
 %% Save results to a file
 % Creating Table 
-T = table(timeSecs',distanceLogs','VariableNames',{'Time_sec','Distance'});
-
-%Saving File Version through current time
+T = table(timeSecs,distanceLogs,'VariableNames',{'Time_sec','Distance'});
 outputName = 'Output_Data_Distance_';
 date = datestr(now,'mm.dd.yy');
-currentTime = datestr(now,'HH.MM.SS');
+Curr
 fileType = '.xlsx';
-
-%Filename eg: 'Output_Data_Distance_02.21.22_17.22.49.xlsx'
-filename = strcat(outputName,date,'_',currentTime,fileType);
-
-%filename3 = strcat('Output_Data_Distance_',datestr(now,'mm.dd.yy'),'_',datestr(now,'HH.MM.SS'),'.xlsx')
+filename = strcat(outputName,date,fileType);
+filename3 = strcat('Output_Data_Distance_',datestr(now,'mm.dd.yy'),'_',datestr(now,'HH.MM.SS'),'.xlsx')
 %filename2 = strcat('Output_Data_Distance',datestr(now,'MM.dd.yy'.xlsx';
 
 % Delete previous file, if exists, to avoid append of data
-if isfile(filename)
-    delete(filename)
+if isfile(filename3)
+    %delete(filename)
     fprintf('Deleted duplicate filename %s to be replaced with current filename %s\n',filename,filename)
 end  %}
+%create Update version
+%file = dir('*.tif'); 
+
 
 % Write table to file 
-writetable(T,filename)
-
+writetable(T,filename3)
 % Print confirmation to command line
 fprintf('Results table with %g Distances measurements saved to file %s\n',...
-    length(timeSecs),filename)
+    length(timeSecs),filename3)
 
 
 %% Clearing serial monitor
@@ -111,6 +108,7 @@ fclose(serialMonitor); %close serial port
 delete(serialMonitor); %remove serial port from memory
 %fclose(a);
 %delete(a);
+
 
 %fclose(a); 
 %delete(a); 

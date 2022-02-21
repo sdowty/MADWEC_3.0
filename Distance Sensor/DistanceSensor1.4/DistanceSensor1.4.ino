@@ -6,7 +6,9 @@
 
 #define echoPin 13 //change pin to the number you want
 #define trigPin 12 // change pin to the number you want
-#define stopPin 2  //D2 for Push botton 
+const int buttonPin = 2;  //D2 for Push botton 
+const int LEDred =  4;
+const int LEDgreen = 5; 
 // Maximum distance we want to ping for (in centimeters).
 #define MAX_DISTANCE 400  
 
@@ -20,12 +22,14 @@ int voltRead;
 float voltage; 
 float attx; 
 
-int stopFlag = 0; // trigger for push button 
+int buttonState = 0; // trigger for push button 
 
 void setup() 
 {
   Serial.begin(115200);
-  pinMode(stopPin, INPUT); 
+  pinMode(buttonPin, INPUT); 
+  pinMode(LEDred, OUTPUT);
+  pinMode(LEDgreen,OUTPUT);
 }
 
 void loop() 
@@ -37,27 +41,34 @@ void loop()
   distance = (duration/2) *(0.0343); 
   
   //Send the distance in 1 byte (actually sends for example 156, not '1' '5' and '6')
-  //Serial.write(distance);
+  Serial.write(distance);
   
       voltRead = analogRead(A3);      // read the input on analog pin 3:
       
       // Convert the analog reading (which goes from 0 - 1023) to a voltage (0 - 5V):
       attx = 11 * (5.0/1023.0);
       voltage = voltRead * attx; 
-
-
+/*
   //Serial.println(voltage);
-  // check button (stopPin) condition 
-  stopFlag = digitalRead(stopPin);
-  if(stopFlag == LOW)
+  // check button states 
+  buttonState = digitalRead(buttonPin);
+  
+  if(buttonState == HIGH)
   {
-    Serial.write(distance); 
+   // Serial.write(distance); 
+    Serial.write(distance);
+    Serial.println("999"); 
+    digitalWrite(LEDred,LOW);
+    digitalWrite(LEDgreen,HIGH); 
   }
   else
   {
-   Serial.write(distance); //  send last value recorded 
-    Serial.println("999"); 
+    Serial.write(distance); //  send last value recorded 
+    digitalWrite(LEDred,HIGH);
+    digitalWrite(LEDgreen,LOW); 
+    
   }
+  */
   delay(50);
 
   
