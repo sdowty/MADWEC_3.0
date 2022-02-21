@@ -10,6 +10,7 @@ delete(instrfindall);
 %a = arduino; 
 serialMonitor = serial('COM7','BaudRate',115200);
 fopen(serialMonitor);
+
 %fopen(a);
 
 %% Acquiring and Displaying Live Data
@@ -32,6 +33,11 @@ waitTime = .5;  %time limit on data recorded
 %get the key currently pressed
 key = get(gcf,'CurrentKey'); 
 
+%Message to know status of Serial Monitor
+if serialMonitor.BytesAvailable == 0 
+    fprintf('Serial Monitor is open and sending distance readings to Matlab! \n');
+end
+
 while  (strcmp(key, 's') == 0) %this while will stop if you press the "s" key
     
     %get the key currently pressed
@@ -39,6 +45,7 @@ while  (strcmp(key, 's') == 0) %this while will stop if you press the "s" key
     
     %block until there's at least 1 byte available to read
     while serialMonitor.BytesAvailable == 0 
+        
     end
     
     % Read distaance value from serial monitor
@@ -68,6 +75,7 @@ else
 end
 
 %% Plot the recorded data
+% creatime time axis, distance array
 [timeLogs,distanceLogs] = getpoints(h);
 timeSecs = (timeLogs-timeLogs(1))*24*3600;
 figure(2)
@@ -89,14 +97,11 @@ fileType = '.xlsx';
 %Filename eg: 'Output_Data_Distance_02.21.22_17.22.49.xlsx'
 filename = strcat(outputName,date,'_',currentTime,fileType);
 
-%filename3 = strcat('Output_Data_Distance_',datestr(now,'mm.dd.yy'),'_',datestr(now,'HH.MM.SS'),'.xlsx')
-%filename2 = strcat('Output_Data_Distance',datestr(now,'MM.dd.yy'.xlsx';
-
 % Delete previous file, if exists, to avoid append of data
 if isfile(filename)
     delete(filename)
     fprintf('Deleted duplicate filename %s to be replaced with current filename %s\n',filename,filename)
-end  %}
+end  
 
 % Write table to file 
 writetable(T,filename)
@@ -104,7 +109,6 @@ writetable(T,filename)
 % Print confirmation to command line
 fprintf('Results table with %g Distances measurements saved to file %s\n',...
     length(timeSecs),filename)
-
 
 %% Clearing serial monitor
 fclose(serialMonitor); %close serial port
