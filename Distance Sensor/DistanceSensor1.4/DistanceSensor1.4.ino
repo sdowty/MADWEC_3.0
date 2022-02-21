@@ -13,8 +13,12 @@
 // NewPing setup of pins and maximum distance.
 NewPing sonar(trigPin, echoPin, MAX_DISTANCE);
 
+// creating variables 
 long duration;
 long distance;
+int voltRead; 
+float voltage; 
+float attx; 
 
 int stopFlag = 0; // trigger for push button 
 
@@ -34,7 +38,15 @@ void loop()
   
   //Send the distance in 1 byte (actually sends for example 156, not '1' '5' and '6')
   //Serial.write(distance);
+  
+      voltRead = analogRead(A3);      // read the input on analog pin 3:
+      
+      // Convert the analog reading (which goes from 0 - 1023) to a voltage (0 - 5V):
+      attx = 11 * (5.0/1023.0);
+      voltage = voltRead * attx; 
 
+
+  //Serial.println(voltage);
   // check button (stopPin) condition 
   stopFlag = digitalRead(stopPin);
   if(stopFlag == LOW)
@@ -43,7 +55,7 @@ void loop()
   }
   else
   {
-    Serial.write(distance); //  send last value recorded 
+   Serial.write(distance); //  send last value recorded 
     Serial.println("999"); 
   }
   delay(50);

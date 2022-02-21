@@ -52,7 +52,7 @@ lh = area(x,y);
 
 % axis([0,-points*data_period, 0, 255]);
     
-axis([-points*data_period, 0, 0, 255]);
+axis([-points*data_period, 0, 0, 100]);
 shg; %brings the figure to the front of all other windows
 %waitTime = 5;   
 key = get(gcf,'CurrentKey'); %get the key currently pressed
@@ -79,7 +79,7 @@ while ( strcmp(key, 's') == 0) %this while will stop if you press the "s" key
     %save the value in distance without a ";" so we can read the number in
     %console
     distance = y(points)
-   
+     
     % edit just the data for the y axis on the graph. This is much, much
     % faster than ploting everything over and over again
    % axis([0,(toc), 0, 255]);
@@ -96,7 +96,7 @@ while ( strcmp(key, 's') == 0) %this while will stop if you press the "s" key
        
        
        
-   end
+   
      
   
     %request the plot to be updated

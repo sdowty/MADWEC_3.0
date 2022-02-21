@@ -11,5 +11,11 @@ Real-time Data Plotting w/ HC-SR04 Sensor
 HC-SR04 w/ matlab 
 ** https://www.mathworks.com/matlabcentral/mlc-downloads/downloads/submissions/57898/versions/1/previews/html/HCSR04Example.html
 
-Elalped time example 
+Elalped time example w/ 5 humidity sensors 
 **https://www.hackster.io/dancili/test-dht22-sensors-with-arduino-and-matlab-74e81d
+
+
+Live data plotting 
+https://www.mathworks.com/videos/plotting-live-data-of-a-temperature-sensor-using-arduino-and-matlab-121317.html
+webniar download 
+https://community.element14.com/products/manufacturers/mathworks/m/files/310
