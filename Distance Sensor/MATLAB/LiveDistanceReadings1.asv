@@ -38,7 +38,20 @@ if serialMonitor.BytesAvailable == 0
     fprintf('Serial Monitor is open and sending distance readings to Matlab! \n');
 end
 
-while  (strcmp(key, 's') == 0) %this while will stop if you press the "s" key
+% setting timer for function to stop taking data 
+maxDuration = 60; % 60 second 
+timer = timer('TimerFcn', 'stat=false; disp(''Time Limit for Data Acquisition has be reached!'')',... 
+                 'StartDelay', maxDuration ); %30 second timer
+start(timer)
+k = 0;
+stat=true;
+while(stat==true)
+  %disp('.')
+  k = k + 1;
+  pause(1) %1 sec
+end
+
+while  (strcmp(key, 's') == 0 &&  k == maxDuration) %this while will stop if you press the "s" key
     
     %get the key currently pressed
     key = get(gcf,'CurrentKey'); 
@@ -67,9 +80,9 @@ while  (strcmp(key, 's') == 0) %this while will stop if you press the "s" key
 end
 
 % Output message
-if strcmp(key, 's') == 0
+if (strcmp(key, 's') == 0 && k == maxDuration)
     disp('Data acquisition ended because the TIME limit has been reached')
-    
+    k = 0;
 else
     disp('Data acquisition ended because the STOP button has been pressed')
 end
