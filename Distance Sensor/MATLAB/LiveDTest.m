@@ -3,20 +3,15 @@ clear;clc;
 close ALL %close all open figures
 delete(instrfindall);
 
-
-
 serialMonitor = serial('COM7','BaudRate',115200);
-%Opening Serial Monitor
+fopen(serialMonitor);
 
- 
 
-    % Read data from serial port
-     fopen(serialMonitor);
+
 %% Acquiring and Displaying Live Data
 figure(1)
 subplot(2,1,1) 
-
-h = animatedline; 
+d = animatedline; 
 dx = gca;
 dx.YGrid = 'on';
 dx.YLim = [0 200];
@@ -29,75 +24,61 @@ title('Aquiring Live Distance Data');
 %get the key currently pressed
 key = get(gcf,'CurrentKey'); 
 
+
+
+
+
 startTime = datetime('now');
-%{
-while  (strcmp(key, 's') == 0 )
-    LiveVoltage();
-end
-%} 
 while  (strcmp(key, 's') == 0 ) %this while will stop if you press the "s" key
-   
+    
     %get the key currently pressed
     key = get(gcf,'CurrentKey'); 
-   
- 
-     
-     %block until there's at least 1 byte available to read
+    
+    %block until there's at least 1 byte available to read
     while serialMonitor.BytesAvailable == 0 
         
     end
-     
+    
+    % Read distaance value from serial monitor
     dist = fread(serialMonitor,1);
-     
+      
+    %get current elasped time for x axis
+    t =  datetime('now') - startTime;
+           
+    % Add points to animation
+    addpoints(d,datenum(t),dist)    % Distance 
+   
     
-    %{
-    while((strcmp(key, 's') == 0)) 
-       voltage = VoltageRead()
-    end
-    %}
-    
-
-    % dist = fscanf(serialMonitor);
-      % get current elasped time for x axis
-     t =  datetime('now') - startTime;
-    
-     % Add points to animation
-     addpoints(h,datenum(t),dist)    % Distance 
-     
-     % Update axes
+    % Update axes
      dx.XLim = datenum([t-seconds(15) t]);
      datetick('x','keeplimits')  
-     drawnow   
-    
    
+    drawnow   
+  
 end
 
 % Output message
 if (strcmp(key, 's') == 0 )
     disp('Data acquisition ended because the TIME limit has been reached')
-   
 else
     disp('Data acquisition ended because the STOP button has been pressed')
+   
+
 end
 
 %% Plot the recorded data
-% creatime time axis, Distance array
-[DistTimeLogs,distanceLogs] = getpoints(h);
-DistTimeSecs = (DistTimeLogs-DistTimeLogs(1))*24*3600;
-
-
+% creatime time axis, distance array
+[timeLogs,distanceLogs] = getpoints(d);
+timeSecs = (timeLogs-timeLogs(1))*24*3600;
 figure(2)
-subplot(2,1,1)
-plot(DistTimeSecs,distanceLogs)
+plot(timeSecs,distanceLogs)
 xlabel('Elapsed time (sec)')
 ylabel('Distance in cm')
 title('Total Recorded Data');
 
-
-
 %% Save results to a file
 % Creating Table 
-T = table(DistTimeSecs',distanceLogs','VariableNames',{'Time_sec','Distance'});
+T = table(timeSecs',distanceLogs','VariableNames',{'Time_sec','Distance'});
 
 %Saving File Version through current time
 outputName = 'Output_Data_Distance_';
@@ -119,7 +100,7 @@ writetable(T,filename)
 
 % Print confirmation to command line
 fprintf('Results table with %g Distances measurements saved to file %s\n',...
-    length(DistTimeSecs),filename)
+    length(timeSecs),filename)
 
 %% Clearing serial monitor
 fclose(serialMonitor); %close serial port

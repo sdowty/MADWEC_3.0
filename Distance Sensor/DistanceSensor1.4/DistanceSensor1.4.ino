@@ -21,7 +21,8 @@ long distance;
 int voltRead; 
 float voltage; 
 float attx; 
-
+float converge;
+//float distConv;
 int buttonState = 0; // trigger for push button 
 
 void setup() 
@@ -39,15 +40,20 @@ void loop()
   duration = sonar.ping_median(iterations);
 
   distance = (duration/2) *(0.0343); 
-  
+ // float distConv = (float)distance;
   //Send the distance in 1 byte (actually sends for example 156, not '1' '5' and '6')
   Serial.write(distance);
-  
+  /*
+  Serial.print(":");
       voltRead = analogRead(A3);      // read the input on analog pin 3:
       
       // Convert the analog reading (which goes from 0 - 1023) to a voltage (0 - 5V):
-      attx = 11 * (5.0/1023.0);
-      voltage = voltRead * attx; 
+      converge = voltRead * (5.0/1023.0);
+      attx = 11;
+      voltage = voltRead;
+      Serial.print(voltage);
+      Serial.print(":"); 
+      */
 /*
   //Serial.println(voltage);
   // check button states 

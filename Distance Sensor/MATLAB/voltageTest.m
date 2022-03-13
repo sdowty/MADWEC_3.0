@@ -2,102 +2,107 @@ clear all
 clear;clc;
 close ALL %close all open figures
 delete(instrfindall);
+%AU = arduino('COM7','Uno' );
 
+%%AU = arduino('COM7','Uno' );
+% Init and open the serial port
+%a = arduino('COM7', 'Uno','baudrate', 115200);
+a = arduino; 
 
+%serialMonitor = serial('COM7','BaudRate',115200);
+%fopen(serialMonitor);
+%a = arduino;
+%fopen(a);
 
-serialMonitor = serial('COM7','BaudRate',115200);
-%Opening Serial Monitor
-
- 
-
-    % Read data from serial port
-     fopen(serialMonitor);
 %% Acquiring and Displaying Live Data
 figure(1)
-subplot(2,1,1) 
 
-h = animatedline; 
-dx = gca;
-dx.YGrid = 'on';
-dx.YLim = [0 200];
+subplot(2,1,1)
+v = animatedline;
+vx = gca;
+vx.YGrid = 'on';
+vx.YLim = [0 10];
 xlabel('Elapsed time (sec)');
-ylabel('Distance in cm');
-title('Aquiring Live Distance Data'); 
+ylabel('Voltage in V');
+title('Aquiring Live Voltage Data'); 
 
+%stop = false;
 
-
+% Acquisition time (min). Insert inf to disable time limit.
+%waitTime = .5;  %time limit on data recorded
+%}
 %get the key currently pressed
 key = get(gcf,'CurrentKey'); 
 
-startTime = datetime('now');
 %{
-while  (strcmp(key, 's') == 0 )
-    LiveVoltage();
+%Message to know status of Serial Monitor
+if serialMonitor.BytesAvailable == 0 
+    fprintf('Serial Monitor is open and sending distance readings to Matlab! \n');
 end
-%} 
+%}
+% setting timer for function to stop taking data 
+startTime = datetime('now');
 while  (strcmp(key, 's') == 0 ) %this while will stop if you press the "s" key
-   
+    
     %get the key currently pressed
     key = get(gcf,'CurrentKey'); 
-   
- 
-     
-     %block until there's at least 1 byte available to read
+    %{
+    %block until there's at least 1 byte available to read
     while serialMonitor.BytesAvailable == 0 
         
     end
-     
-    dist = fread(serialMonitor,1);
-     
-    
-    %{
-    while((strcmp(key, 's') == 0)) 
-       voltage = VoltageRead()
-    end
     %}
     
+    % Read distaance value from serial monitor
 
-    % dist = fscanf(serialMonitor);
-      % get current elasped time for x axis
-     t =  datetime('now') - startTime;
+    voltage = readVoltage(a,'A3');
     
-     % Add points to animation
-     addpoints(h,datenum(t),dist)    % Distance 
-     
-     % Update axes
-     dx.XLim = datenum([t-seconds(15) t]);
-     datetick('x','keeplimits')  
-     drawnow   
+    %get current elasped time for x axis
+    t =  datetime('now') - startTime;
+    
+   % voltage = readVoltage(serialMonitor,'A3')
+        
+    % Add points to animation
+
+    addpoints(v,datenum(t),voltage) % Voltage
+    
+    % Update axes
+   
+    vx.XLim = datenum([t-seconds(15) t]);
+    datetick('x','keeplimits')
     
    
+    drawnow   
+  
 end
 
 % Output message
 if (strcmp(key, 's') == 0 )
     disp('Data acquisition ended because the TIME limit has been reached')
    
+    % reset timer
+  % delete(timer);
 else
     disp('Data acquisition ended because the STOP button has been pressed')
+   
+    % reset timer
+  %  k = 0;
+  %  delete(timer);
 end
 
 %% Plot the recorded data
-% creatime time axis, Distance array
-[DistTimeLogs,distanceLogs] = getpoints(h);
-DistTimeSecs = (DistTimeLogs-DistTimeLogs(1))*24*3600;
-
-
+% creatime time axis, distance array
+[timeLogs,distanceLogs] = getpoints(v);
+timeSecs = (timeLogs-timeLogs(1))*24*3600;
 figure(2)
-subplot(2,1,1)
-plot(DistTimeSecs,distanceLogs)
+plot(timeSecs,distanceLogs)
 xlabel('Elapsed time (sec)')
 ylabel('Distance in cm')
 title('Total Recorded Data');
 
-
-
 %% Save results to a file
 % Creating Table 
-T = table(DistTimeSecs',distanceLogs','VariableNames',{'Time_sec','Distance'});
+T = table(timeSecs',distanceLogs','VariableNames',{'Time_sec','Distance'});
 
 %Saving File Version through current time
 outputName = 'Output_Data_Distance_';
@@ -119,7 +124,7 @@ writetable(T,filename)
 
 % Print confirmation to command line
 fprintf('Results table with %g Distances measurements saved to file %s\n',...
-    length(DistTimeSecs),filename)
+    length(timeSecs),filename)
 
 %% Clearing serial monitor
 fclose(serialMonitor); %close serial port
