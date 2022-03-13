@@ -73,6 +73,7 @@ while  (strcmp(key, 's') == 0 )  % Press 'S' Key to STOP Live Acquisition
     dx.XLim = datenum([t-seconds(15) t]); 
     vx.XLim = datenum([t-seconds(15) t]);
     datetick('x','keeplimits')
+    datetick('x','keeplimits')
     drawnow
     
 end
