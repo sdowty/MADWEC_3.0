@@ -37,7 +37,7 @@ xlabel('Elapsed time (sec)');
 ylabel('Voltage in V');
 title('Aquiring Live Voltage Data');
 
-%figure(3)
+figure(3)
 % Current Plot
 subplot(2,1,2) 
 c = animatedline;
@@ -68,7 +68,7 @@ while  (strcmp(key, 's') == 0 )  % Press 'S' Key to STOP Live Acquisition
     % Getting Values
     distance = readDistance(ultrasonicObj) * 100;  % Distance 
     voltage = readVoltage(arduinoObj,'A0') * 11;   % Voltage 
-    current = fread(currentSM,1) ;           % Current
+  %  current = fread(currentSM,1) ;           % Current
    %{ 
     % Create median for incoming Distance Value
    for i = 0:1:iterations
@@ -89,19 +89,36 @@ while  (strcmp(key, 's') == 0 )  % Press 'S' Key to STOP Live Acquisition
     % Add points to animation
     addpoints(d,datenum(t),distance)    % Distance 
     addpoints(v,datenum(t),voltage)     % Voltage 
-    addpoints(c,datenum(t),current)     % Current
+  %  addpoints(c,datenum(t),current)     % Current
     
     % Update axes
     dx.XLim = datenum([t-seconds(10) t]); 
     vx.XLim = datenum([t-seconds(10) t]);
-    cx.XLim = datenum([t-seconds(10) t]);
+   % cx.XLim = datenum([t-seconds(10) t]);
     datetick('x','keeplimits')
     datetick('x','keeplimits')
-    datetick('x','keeplimits')
+   % datetick('x','keeplimits')
     drawnow
     
 end
 
+while  (strcmp(key, 's') == 0 )
+  
+    % get the key currently pressed
+    key = get(gcf,'CurrentKey'); 
+      
+    %block until there's at least 1 byte available to read
+    while currentSM.BytesAvailable == 0 
+        
+    end
+    current = fread(currentSM,1) ;           % Current
+    %get current elasped time for x axis
+    tc =  datetime('now') - startTime;
+    addpoints(c,datenum(tc),current)     % Current
+    cx.XLim = datenum([tc-seconds(10) t]);
+    datetick('x','keeplimits')
+    drawnow
+end
 
 % Output message
 if (strcmp(key, 's') == 0 )

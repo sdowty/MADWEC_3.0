@@ -93,5 +93,5 @@ fprintf('current: %f mA\n', current);
     sensorValue = 0;
 end
 
-
+%}
 

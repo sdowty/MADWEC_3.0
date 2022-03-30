@@ -3,7 +3,7 @@ clear;clc;
 close ALL %close all open figures
 delete(instrfindall);
 
-serialMonitor = serial('COM7','BaudRate',115200);
+serialMonitor = serial('COM9','BaudRate',115200);
 fopen(serialMonitor);
 
 %ai = analoginput('arduino')
@@ -11,7 +11,7 @@ fopen(serialMonitor);
 
 %% Acquiring and Displaying Live Data
 figure(1)
-subplot(2,1,1) 
+%subplot(2,1,1) 
 d = animatedline; 
 dx = gca;
 dx.YGrid = 'on';

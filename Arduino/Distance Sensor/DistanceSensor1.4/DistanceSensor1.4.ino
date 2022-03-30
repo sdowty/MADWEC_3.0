@@ -4,8 +4,8 @@
 #include <Wire.h>
 #include <NewPing.h>
 
-#define echoPin 13 //change pin to the number you want
-#define trigPin 12 // change pin to the number you want
+#define echoPin 10 //change pin to the number you want
+#define trigPin 9 // change pin to the number you want
 const int buttonPin = 2;  //D2 for Push botton 
 const int LEDred =  4;
 const int LEDgreen = 5; 

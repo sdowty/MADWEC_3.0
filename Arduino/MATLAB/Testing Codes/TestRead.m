@@ -5,8 +5,8 @@ close ALL
 delete(instrfindall);
 
 % Initializing Arduino 
-arduinoObj = arduino('COM7','Uno','Libraries','Ultrasonic');
-ultrasonicObj = ultrasonic(arduinoObj,'D10','D9'); % trig D10  %echo D9
+arduinoObj = arduino('COM9','Uno','Libraries','Ultrasonic');
+ultrasonicObj = ultrasonic(arduinoObj,'D9','D10'); % trig D10  %echo D9
 
 %% Acquiring and Displaying Live Data: (Distance, Voltage)
 
@@ -14,7 +14,7 @@ ultrasonicObj = ultrasonic(arduinoObj,'D10','D9'); % trig D10  %echo D9
 figure(1)
 
 % Distance Plot
-subplot(2,1,1) 
+%subplot(2,1,1) 
 d = animatedline; 
 dx = gca;
 dx.YGrid = 'on';
@@ -24,6 +24,7 @@ ylabel('Distance in cm');
 title('Aquiring Live Distance Data'); 
 
 % Velocity Plot
+%{  
 subplot(2,1,2) 
 v = animatedline;
 vx = gca;
@@ -33,6 +34,7 @@ xlabel('Elapsed time (sec)');
 ylabel('Voltage in V');
 title('Aquiring Live Voltage Data');
 
+%} 
 % Get the key currently pressed
 key = get(gcf,'CurrentKey'); 
 
@@ -45,7 +47,7 @@ while  (strcmp(key, 's') == 0 )  % Press 'S' Key to STOP Live Acquisition
     
     % Getting Values
     distance = readDistance(ultrasonicObj) * 100;  % Distance 
-    voltage = readVoltage(arduinoObj,'A0');        % Voltage 
+  %  voltage = readVoltage(arduinoObj,'A0');        % Voltage 
     
    %{ 
     % Create median for incoming Distance Value
@@ -66,13 +68,13 @@ while  (strcmp(key, 's') == 0 )  % Press 'S' Key to STOP Live Acquisition
            
     % Add points to animation
     addpoints(d,datenum(t),distance)    % Distance 
-    addpoints(v,datenum(t),voltage)     % Voltage 
+  %  addpoints(v,datenum(t),voltage)     % Voltage 
     
     
     % Update axes
     dx.XLim = datenum([t-seconds(15) t]); 
-    vx.XLim = datenum([t-seconds(15) t]);
-    datetick('x','keeplimits')
+   % vx.XLim = datenum([t-seconds(15) t]);
+   % datetick('x','keeplimits')
     datetick('x','keeplimits')
     drawnow
     
@@ -90,10 +92,12 @@ end
 % creatime time axis, Distance array
 [DistTimeLogs,DistanceLogs] = getpoints(d);
 DistTimeSecs = (DistTimeLogs-DistTimeLogs(1))*24*3600;
-
+%{
 % creatime time axis, Voltage array
 [VoltTimeLogs,VoltageLogs] = getpoints(v);
 VoltTimeSecs = (VoltTimeLogs-VoltTimeLogs(1))*24*3600;
+%}
+
 
 % Solve for Velocity by getting the slope
 % Creating a Dist vs Time Table
@@ -121,18 +125,18 @@ plot(time,Velocity);
 xlabel('Total Elasped Time');
 ylabel('Velocity in m/s');
 title('Velocity of Winch') ;
-
+%{
 % Plotting Voltage vs. Time
 subplot(3,1,3)
 plot(VoltTimeSecs,VoltageLogs)
 xlabel('Elapsed time (sec)')
 ylabel('Distance in cm')
 title('Total Recorded Voltage Data');
-
+%}
 
 %% Save results to a file
 % Creating Table 
-Final_T = table(DistTimeSecs',DistanceLogs',Velocity,VoltageLogs','VariableNames',{'Time_sec','Distance','Velocity','Voltage'});
+Final_T = table(DistTimeSecs',DistanceLogs',Velocity','VariableNames',{'Time_sec','Distance','Velocity'});
 
 % Saving File Version through current time
 outputName = 'Output_Data_Dx_Vms_V_';

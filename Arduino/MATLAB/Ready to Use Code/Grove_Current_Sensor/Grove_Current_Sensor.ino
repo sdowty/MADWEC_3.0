@@ -1,6 +1,8 @@
+#include <Wire.h>
 #ifdef ARDUINO_SAMD_VARIANT_COMPLIANCE
   #define RefVal 3.3
   #define SERIAL SerialUSB
+  
 #else
   #define RefVal 5.0
   #define SERIAL Serial
@@ -10,7 +12,7 @@
 #define Pin A1
  
 // Take the average of 500 times
-const int averageValue = 500;
+const int averageValue = 250;
  long CURRENT;
 long int sensorValue = 0;
 float sensitivity = 1000.0 / 264.0; //1000mA per 264mV 
@@ -19,18 +21,12 @@ float sensitivity = 1000.0 / 264.0; //1000mA per 264mV
 float Vref = 317.38;   //Vref is zero drift value, you need to change this value to the value you actually measured before using it.
 void setup() 
 {
-  SERIAL.begin(9600);
+  Serial.begin(9600);
 }
  
 void loop() 
 {
 
-
-
-  
-
-
-  
  /*//////////////////////////////////////////////////////////////////////////////
   // VREF CALIBRATION 
    // Set Reading pins as open and run code to measure voltage from analog pin that 
@@ -61,8 +57,8 @@ void loop()
   {
     sensorValue += analogRead(Pin);
  
-    // wait 2 milliseconds before the next loop
-    delay(2);
+    // wait 1 milliseconds before the next loop
+    delay(1);
  
   }
  
@@ -83,21 +79,27 @@ void loop()
  
   // Calculate the corresponding current
   float current = (voltage - Vref) * sensitivity;
- 
+  CURRENT = (float)current;
+  //Serial.print(current);
+  Serial.write(CURRENT);
+ //CURRENT = current;
   // Print display voltage (mV)
   // This voltage is the pin voltage corresponding to the current
   /*
   voltage = unitValue * sensorValue-Vref;
   SERIAL.print(voltage);
   SERIAL.println("mV");
-  */current = CURRENT;
-  Serial.write(CURRENT);
+  */
+  //current = CURRENT;
+  //Serial.print(CURRENT);
+  //Serial.write(CURRENT);
+  //Serial.print(current);
   // Print display current (mA)
  // SERIAL.print(current);
  // SERIAL.println("mA");
- 
+  //SERIAL.println("");
+ // SERIAL.println("mA");
   //SERIAL.print("\n");
- 
   // Reset the sensorValue for the next reading
   //sensorValue = 0;
   // Read it once per second
