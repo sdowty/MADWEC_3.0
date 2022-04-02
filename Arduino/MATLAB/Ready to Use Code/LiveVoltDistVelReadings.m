@@ -5,6 +5,11 @@ close ALL
 delete(instrfindall);
 
 % Initializing Arduino 
+% COM ports change from computer to computer
+% Check by going to the Command Window and entering: 
+% arduino()   
+% press enter
+%change t
 arduinoObj = arduino('COM9','Uno','Libraries','Ultrasonic');
 ultrasonicObj = ultrasonic(arduinoObj,'D9','D10'); % trig D9  %echo D10
 
@@ -32,7 +37,7 @@ subplot(2,1,1)
 v = animatedline;
 vx = gca;
 vx.YGrid = 'on';
-vx.YLim = [0 10];
+%vx.YLim = [0 10];
 xlabel('Elapsed time (sec)');
 ylabel('Voltage in V');
 title('Aquiring Live Voltage Data');
@@ -43,7 +48,7 @@ subplot(2,1,2)
 c = animatedline;
 cx = gca;
 cx.YGrid = 'on';
-%cx.YLim = [0 100];
+%cx.YLim = [0 500];
 xlabel('Elapsed time (sec)');
 ylabel('Current in mA')
 title('Aquiring Live Current Data');
@@ -69,6 +74,9 @@ while  (strcmp(key, 's') == 0 )  % Press 'S' Key to STOP Live Acquisition
     distance = readDistance(ultrasonicObj) * 100;  % Distance 
     voltage = readVoltage(arduinoObj,'A0') * 11;   % Voltage 
     current = fread(currentSM,1) ;           % Current
+    %current = fscanf(currentSM, '%f');
+    %current = fread(currenSM, 1, 'float=>long');
+    
    %{ 
     % Create median for incoming Distance Value
    for i = 0:1:iterations
@@ -184,9 +192,9 @@ title('Total Recorded Current Data');
 
 % Plotting Output Power vs. Time
 figure(5)
-plot(timeP,Output_Power)
+plot(timeP,Output_Power)  %Magnitude removes the Negative  on the graphs
 xlabel('Elapsed time (sec)')
-ylabel('Power in W')
+ylabel('Power in mW')
 title('Total Recorded Power Data');
 
 
@@ -195,7 +203,7 @@ title('Total Recorded Power Data');
 Final_T = table(DistTimeSecs',DistanceLogs',Velocity,VoltageLogs','VariableNames',{'Time_sec','Distance','Velocity','Voltage'});
 
 % Saving File Version through current time
-outputName = 'Output_Data_Dx_Vms_V_';
+outputName = 'Output_Data_DVI_';
 date = datestr(now,'mm.dd.yy');
 currentTime = datestr(now,'HH.MM.SS');
 fileType = '.xlsx';
@@ -207,7 +215,10 @@ filename = strcat(outputName,date,'_',currentTime,fileType);
 % Establishing Current Folder Location
 CurrentFolder = 'C:\Users\3cityDELL\OneDrive\Documents\MADWEC_3.0\Arduino\MATLAB'; %Input Desired/Current Folder Location
 DataOutput = 'Data Output';
-FolderDestination = fullfile(CurrentFolder,DataOutput);   
+FolderDestination = fullfile(CurrentFolder,DataOutput);  
+
+% Individual Data Folders THat will have Excel Sheets and Figures
+%DataFolder = strcat(outputName,date,CurrentTime);
 
 % New Folder Destination
 % C:\Users\3cityDELL\OneDrive\Documents\MADWEC_3.0\Distance Sensor\MATLAB\Data Output
@@ -234,7 +245,7 @@ if exist(FolderDestination, 'dir')
 else % If the folder doesn't exist, create it.
    
     % Creating Folder Directory
-    mkdir(FolderDestination);
+    mkdir(fullfile(FolderDestination,DataFolder));
 
     % Delete previous file, if exists, to avoid append of data
     if isfile(fullfile(FolderDestination,filename))

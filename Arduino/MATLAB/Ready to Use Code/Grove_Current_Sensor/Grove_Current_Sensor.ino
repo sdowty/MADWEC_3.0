@@ -12,8 +12,9 @@
 #define Pin A1
  
 // Take the average of 500 times
-const int averageValue = 250;
- long CURRENT;
+const int averageValue = 150;
+  long convFLcurrent;
+  float convLFcurrent;
 long int sensorValue = 0;
 float sensitivity = 1000.0 / 264.0; //1000mA per 264mV 
  
@@ -79,9 +80,15 @@ void loop()
  
   // Calculate the corresponding current
   float current = (voltage - Vref) * sensitivity;
-  CURRENT = (float)current;
-  //Serial.print(current);
-  Serial.write(CURRENT);
+  convFLcurrent = current;
+  convLFcurrent = convFLcurrent;
+ //Serial.print(current);
+// SERIAL.write(CURRENT);
+  SERIAL.write((long int)current);
+  //Serial.write(CURRENT);
+ // SERIAL.print("mA F: ");
+ // SERIAL.print(convFLcurrent);
+//  SERIAL.println("mA FL"); 
  //CURRENT = current;
   // Print display voltage (mV)
   // This voltage is the pin voltage corresponding to the current
