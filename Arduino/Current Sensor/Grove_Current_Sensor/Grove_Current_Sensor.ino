@@ -1,3 +1,4 @@
+#include <Wire.h> 
 #ifdef ARDUINO_SAMD_VARIANT_COMPLIANCE
   #define RefVal 3.3
   #define SERIAL SerialUSB
@@ -10,7 +11,7 @@
 #define Pin A1
  
 // Take the average of 500 times
-const int averageValue = 500;
+const int averageValue = 150;
  long CURRENT;
 long int sensorValue = 0;
 float sensitivity = 1000.0 / 264.0; //1000mA per 264mV 
@@ -62,7 +63,7 @@ void loop()
     sensorValue += analogRead(Pin);
  
     // wait 2 milliseconds before the next loop
-    delay(2);
+   delay(1);
  
   }
  
@@ -83,15 +84,23 @@ void loop()
  
   // Calculate the corresponding current
   float current = (voltage - Vref) * sensitivity;
+  if ( current < 0 )
+  {
+    current = 0;
+  }
+  if (current <= 18.51)
+  {
+    current = 0;
+  }
  
   // Print display voltage (mV)
   // This voltage is the pin voltage corresponding to the current
-  /*
-  voltage = unitValue * sensorValue-Vref;
-  SERIAL.print(voltage);
-  SERIAL.println("mV");
-  */current = CURRENT;
-  Serial.write(CURRENT);
+  
+ // voltage = unitValue * sensorValue-Vref;
+ // SERIAL.print(voltage);
+ // SERIAL.println("mV");
+  
+  Serial.println(current);
   // Print display current (mA)
  // SERIAL.print(current);
  // SERIAL.println("mA");

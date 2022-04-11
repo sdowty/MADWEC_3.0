@@ -19,39 +19,40 @@ fopen(currentSM);
 %% Acquiring and Displaying Live Data: (Distance, Voltage)
 
 % Setting up the figures
-figure(1)
+ f1 = figure('Name','Voltage and Current');
+ f1.WindowState = 'maximized';
+%movegui(f1,'east','onscreen');
+% Voltage and Current Plot
+subplot(2,2,2) 
+c = animatedline; 
+cx = gca;
+cx.YGrid = 'on';
+%dx.YLim = [0];
+xlabel('Elapsed time (sec)');
+ylabel('Current in mA');
+title('Aquiring Live Current Data'); 
+
+% Voltage Plot
+subplot(2,2,4) 
+v = animatedline;
+vx = gca;
+vx.YGrid = 'on';
+vx.YLim = [0 10];
+xlabel('Elapsed time (sec)');
+ylabel('Voltage in V');
+title('Aquiring Live Voltage Data');
 
 % Distance Plot
-%subplot(3,1,1) 
-d = animatedline; 
+%f2 = figure('Name', 'Distance  Sensor');
+%movegui(f2,'west','onscreen');
+subplot(2,2,[1 3])
+d = animatedline;
 dx = gca;
 dx.YGrid = 'on';
 dx.YLim = [0 200];
 xlabel('Elapsed time (sec)');
 ylabel('Distance in cm');
-title('Aquiring Live Distance Data'); 
-
-% Voltage Plot
-figure(2)
-subplot(2,1,1) 
-v = animatedline;
-vx = gca;
-vx.YGrid = 'on';
-%vx.YLim = [0 10];
-xlabel('Elapsed time (sec)');
-ylabel('Voltage in V');
-title('Aquiring Live Voltage Data');
-
-%figure(3)
-% Current Plot
-subplot(2,1,2) 
-c = animatedline;
-cx = gca;
-cx.YGrid = 'on';
-%cx.YLim = [0 500];
-xlabel('Elapsed time (sec)');
-ylabel('Current in mA')
-title('Aquiring Live Current Data');
+title('Aquiring Live Distance Data');
 
 % Get the key currently pressed
 key = get(gcf,'CurrentKey'); 
@@ -73,23 +74,15 @@ while  (strcmp(key, 's') == 0 )  % Press 'S' Key to STOP Live Acquisition
     % Getting Values
     distance = readDistance(ultrasonicObj) * 100;  % Distance 
     voltage = readVoltage(arduinoObj,'A0') * 11;   % Voltage 
-    current = fread(currentSM,1) ;           % Current
-    %current = fscanf(currentSM, '%f');
+  %  current = fread(currentSM,1) ;           % Current
+    curSM = fscanf(currentSM,'%s');
     %current = fread(currenSM, 1, 'float=>long');
     
-   %{ 
-    % Create median for incoming Distance Value
-   for i = 0:1:iterations
-       dist = readDistance(ultrasonicObj) * 100;  % Distance 
-       distance = distance + dist;
-   end 
+    current = str2double(curSM);
+  
     
-   % distance = distance/iterations; 
-       %{  Notes:
-          - Issue is that the Iterations take too long in the while loop 
-          - Need to find a way to keep the iterations without making loop slow
-       %} 
-   %}
+    
+ 
     
     %get current elasped time for x axis
     t =  datetime('now') - startTime;
@@ -100,9 +93,9 @@ while  (strcmp(key, 's') == 0 )  % Press 'S' Key to STOP Live Acquisition
     addpoints(c,datenum(t),current)     % Current
     
     % Update axes
-    dx.XLim = datenum([t-seconds(10) t]); 
-    vx.XLim = datenum([t-seconds(10) t]);
-    cx.XLim = datenum([t-seconds(10) t]);
+    dx.XLim = datenum([t-seconds(15) t]); 
+    vx.XLim = datenum([t-seconds(15) t]);
+    cx.XLim = datenum([t-seconds(15) t]);
     datetick('x','keeplimits')
     datetick('x','keeplimits')
     datetick('x','keeplimits')
@@ -152,22 +145,23 @@ Tp= table(VoltTimeSecs',VoltageLogs',CurrentLogs','VariableNames',{'Time_sec','D
 timeP = Tp{:,1};
 V  = Tp{:,2};
 I = Tp{:,3};
-Output_Power = gradient(V) .* gradient(I); 
+Output_Power = (V) .* (I); 
 T2 = table(timeP,Output_Power, 'VariableNames',{'time','Output Power'});
 
 %% Plotting Total Data
 
 % Setting Second Figure
-figure(3)
+f2 = figure('Name', 'Total Distance & Velocity Plot');
+f2.WindowState = 'maximized';
 % Plotting Distance vs. Time
-subplot(2,1,1)
+subplot(2,3,1)
 plot(DistTimeSecs,DistanceLogs)
 xlabel('Elapsed time (sec)')
 ylabel('Distance in cm')
 title('Total Recorded Distance Data');
 
 % Plotting Velocity vs. Time
-subplot(2,1,2)
+subplot(2,3,4)
 plot(timeV,Velocity);
 xlabel('Total Elasped Time');
 ylabel('Velocity in cm/s');
@@ -175,23 +169,24 @@ title('Velocity of Winch') ;
 
 
 
-figure(4)
+%figure('Name', 'Total Voltage & Current Plot' )
 % Plotting Voltage vs. Time
-subplot(2,1,1)
+subplot(2,3,2)
 plot(VoltTimeSecs,VoltageLogs)
 xlabel('Elapsed time (sec)')
 ylabel('Voltage in (V)')
 title('Total Recorded Voltage Data');
 
 % Plotting Current vs. Time
-subplot(2,1,2)
+subplot(2,3,5)
 plot(CurrTimeSecs,CurrentLogs)
 xlabel('Elapsed time (sec)')
 ylabel('Current in mA')
 title('Total Recorded Current Data');
 
 % Plotting Output Power vs. Time
-figure(5)
+%figure(5)
+subplot(2,3,[3 6])
 plot(timeP,Output_Power)  %Magnitude removes the Negative  on the graphs
 xlabel('Elapsed time (sec)')
 ylabel('Power in mW')
@@ -203,7 +198,7 @@ title('Total Recorded Power Data');
 Final_T = table(DistTimeSecs',DistanceLogs',Velocity,VoltageLogs','VariableNames',{'Time_sec','Distance','Velocity','Voltage'});
 
 % Saving File Version through current time
-outputName = 'Output_Data_DVI_';
+outputName = 'Output_Data_W0.86_P15_T1_';
 date = datestr(now,'mm.dd.yy');
 currentTime = datestr(now,'HH.MM.SS');
 fileType = '.xlsx';

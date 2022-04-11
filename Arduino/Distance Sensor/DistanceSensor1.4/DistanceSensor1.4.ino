@@ -6,9 +6,7 @@
 
 #define echoPin 10 //change pin to the number you want
 #define trigPin 9 // change pin to the number you want
-const int buttonPin = 2;  //D2 for Push botton 
-const int LEDred =  4;
-const int LEDgreen = 5; 
+
 // Maximum distance we want to ping for (in centimeters).
 #define MAX_DISTANCE 400  
 
