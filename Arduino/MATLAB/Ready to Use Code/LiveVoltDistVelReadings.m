@@ -3,8 +3,24 @@ clear all
 clear;clc;
 close ALL 
 delete(instrfindall);
+%% Initialize Test Parameters
+fprintf('Initialize Testing Parameter\n');
+testPrompt = 'Test number (#): ';
+powPrompt = 'Winch Power (%): ';
+wavPrompt = 'Wave Height (m): ';
 
-% Initializing Arduino 
+TestInput = input(testPrompt);
+PowInput = input(powPrompt);
+WavInput = input(wavPrompt);
+
+T = num2str(TestInput);
+P = num2str(PowInput);
+H = num2str(WavInput);
+% date = datestr(now,'mm.dd');
+% DataFolder = strcat(date,' P', P,' W',H,' Test - ',T);
+% Folder Name Ex: '04.05_P15_W0.66_Test - 1'
+
+%% Initializing Arduino 
 % COM ports change from computer to computer
 % Check by going to the Command Window and entering: 
 % arduino()   
@@ -106,11 +122,11 @@ end
 
 % Output message
 if (strcmp(key, 's') == 0 )
-    disp('Live Data acquisition ended because the TIME limit has been reached! ')
+    disp('\n***Live Data acquisition ended because the TIME limit has been reached!***')
    % close all;
    
 else
-    disp('Live Data acquisition ended because the STOP button has been pressed! ')
+    disp('\n***Live Data acquisition ended because the STOP button has been pressed!***')
    % close all; 
 end
 %% Data Acquisition (Distance, Velocity, Voltage)
@@ -198,68 +214,83 @@ title('Total Recorded Power Data');
 Final_T = table(DistTimeSecs',DistanceLogs',Velocity,VoltageLogs','VariableNames',{'Time_sec','Distance','Velocity','Voltage'});
 
 % Saving File Version through current time
-outputName = 'Output_Data_W0.86_P15_T6_';
 date = datestr(now,'mm.dd.yy');
 currentTime = datestr(now,'HH.MM.SS');
 fileType = '.xlsx';
 
-% Filename eg: 'Output_Data_Distance_02.21.22_17.22.49.xlsx'
-filename = strcat(outputName,date,'_',currentTime,fileType);
+% Filename eg: '04.05 P15 W0.66 Test - 1.xlsx'
+filename = strcat(date,' P', P,'%',' W',H,'m',' Test - ',T,fileType);
 
+
+SvDataFolder = strcat(date,' P', P,'%',' W',H,'m',' Test - ',T);
+% Folder Name Ex: '04.05 P15 W0.66 Test - 1'
 
 % Establishing Current Folder Location
 CurrentFolder = 'C:\Users\3cityDELL\OneDrive\Documents\MADWEC_3.0\Arduino\MATLAB'; %Input Desired/Current Folder Location
-DataOutput = 'Data Output';
-FolderDestination = fullfile(CurrentFolder,DataOutput);  
-
+MsDataFolder = 'Data Acquistion';
+MsFolderLoc = fullfile(CurrentFolder,MsDataFolder);  
+SvFolderLoc = fullfile(MsFolderLoc,SvDataFolder);
 % Individual Data Folders THat will have Excel Sheets and Figures
 %DataFolder = strcat(outputName,date,CurrentTime);
 
 % New Folder Destination
 % C:\Users\3cityDELL\OneDrive\Documents\MADWEC_3.0\Distance Sensor\MATLAB\Data Output
 
-% If the folder exist, Save file in it
-if exist(FolderDestination, 'dir') 
 
-    % Delete previous file, if exists, to avoid append of data
-    if isfile(fullfile(FolderDestination,filename))
-        delete(fullfile(FolderDestination,filename))
-        fprintf('Deleted duplicate filename %s to be replaced with current filename "%s"\n\n',filename,filename)
+comments = fullfile(SvFolderLoc, 'Comments.txt');
+
+% If the folder exist, Save file in it
+if exist(MsFolderLoc, 'dir') 
+   %{
+    % Delete previous Folder, if exists, to avoid append of data
+    if isfile(fullfile(SvFolderLoc,filename))
+        delete(fullfile(SvFolderLoc,filename))
+        %duplicate = strcat(SvDataFolder, 'COPY');
+        fprintf('Duplicate filename "%s" found! File Deleted!\n\n',filename)
     end  
+    %}
+    % Creating Folder Directory
+    mkdir(SvFolderLoc);
     
     % Write table to file and save it to folder location
-    writetable(Final_T, fullfile(FolderDestination,filename))
-    
+    writetable(Final_T, fullfile(SvFolderLoc,filename))
+    % Saving Figure to folder Location
+     saveas(figure(2), fullfile(SvFolderLoc,'Total Data Aqcuisation Screen Shot'), 'png')
+     % Saving Comments Txt file
+     fopen(comments,'w');
+   %  fclose(comments);
     % Print Data confirmation to command line
-    fprintf('\nResulting Table: \n %g Measurements of Distances, Velocity & Voltage  \nSaved to file:\n "%s"\n',...
-        length(DistTimeSecs),filename)   
+    fprintf('\nFolder Location: "C:..../%s" was found in directory. \n',SvDataFolder);
+    fprintf('Resulting Table: \n %g Measurements of Distances, Velocity, Voltage, Current, and Output Power  \n',...
+        length(DistTimeSecs));
+    fprintf('Saved to file:\n "%s"\n',filename);
     % Print Folder Location confirmation to command line
-    fprintf(['\nFolder: "%s" was found in directory. \n'...
-            'File: "%s" was saved to folder: "%s" \n'],DataOutput,filename,DataOutput)
+    fprintf('File: "%s" was saved to folder: "%s" \n',filename,SvDataFolder)
         
 else % If the folder doesn't exist, create it.
    
     % Creating Folder Directory
-    mkdir(fullfile(FolderDestination,DataFolder));
-
-    % Delete previous file, if exists, to avoid append of data
-    if isfile(fullfile(FolderDestination,filename))
-        delete(fullfile(FolderDestination,filename))
-        fprintf('Deleted duplicate filename %s to be replaced with current filename "%s"\n\n',filename,filename)
-    end  
+    mkdir(SvFolderLoc);
     
     % Write table to file and save it to folder location
-    writetable(Final_T, fullfile(FolderDestination,filename))
-    
-    % Print Data Confirmation to command line
-    fprintf('\nResulting Table: \n %g Measurements of Distances, Velocity & Voltage  \nSaved to file:\n "%s"\n',...
-        length(DistTimeSecs),filename)   
-    
+    writetable(Final_T, fullfile(SvFolderLoc,filename))
+    % Saving Figure to folder Location
+    saveas(figure(2), fullfile(SvFolderLoc,'Total Data Aqcuisation Screen Shot'), 'png')
+  
     % Print Folder Location confirmation to command line
     fprintf('\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! \n')
-    fprintf(['Folder: "%s" was NOT found in directory, so a new folder: "%s" was created! \n'...
-            'File: "%s" was saved to folder: "%s" \n'],DataOutput,DataOutput,filename,DataOutput)
-    fprintf('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! \n')
+    fprintf('Folder: "C:.../%s" was NOT found in directory, so a new folder: "%s" was created! \n',...
+            MsDataFolder,MsDataFolder);
+    fprintf('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! \n\n')
+    
+    % Print Data confirmation to command line
+    fprintf('Folder Location: "C:.../%s" was found in directory. \n',SvDataFolder);
+    fprintf('Resulting Table: \n %g Measurements of Distances, Velocity, Voltage, Current, and Output Power  \n',...
+        length(DistTimeSecs));
+    fprintf('Saved to file:\n "%s"\n',filename);
+    % Print Folder Location confirmation to command line
+    fprintf('File: "%s" was saved to folder: "%s" \n',filename,SvDataFolder)
+         
 end
 
 %% Clearing serial monitor

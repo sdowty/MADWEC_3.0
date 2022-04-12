@@ -1,4 +1,4 @@
-% Close all open figures
+ % Close all open figures
 clear all 
 clear;clc;
 close ALL 
@@ -214,18 +214,18 @@ SvFolderLoc = fullfile(MsFolderLoc,SvDataFolder);
 % C:\Users\3cityDELL\OneDrive\Documents\MADWEC_3.0\Distance Sensor\MATLAB\Data Output
 
 
-comments = strcat(SvFolderLoc,
+comments = fullfile(SvFolderLoc, 'Comments.txt');
 
 % If the folder exist, Save file in it
 if exist(MsFolderLoc, 'dir') 
-   
+   %{
     % Delete previous Folder, if exists, to avoid append of data
     if isfile(fullfile(SvFolderLoc,filename))
         delete(fullfile(SvFolderLoc,filename))
         %duplicate = strcat(SvDataFolder, 'COPY');
         fprintf('Duplicate filename "%s" found! File Deleted!\n\n',filename)
     end  
-    
+    %}
     % Creating Folder Directory
     mkdir(SvFolderLoc);
     
@@ -233,6 +233,9 @@ if exist(MsFolderLoc, 'dir')
     writetable(Final_T, fullfile(SvFolderLoc,filename))
     % Saving Figure to folder Location
      saveas(figure(2), fullfile(SvFolderLoc,'Total Data Aqcuisation Screen Shot'), 'png')
+     % Saving Comments Txt file
+     fopen(comments,'w');
+   %  fclose(comments);
     % Print Data confirmation to command line
     fprintf('\n\nFolder Location: "C:..../%s" was found in directory. \n',SvDataFolder);
     fprintf('Resulting Table: \n %g Measurements of Distances, Velocity, Voltage, Current, and Output Power  \n',...
@@ -250,8 +253,7 @@ else % If the folder doesn't exist, create it.
     writetable(Final_T, fullfile(SvFolderLoc,filename))
     % Saving Figure to folder Location
     saveas(figure(2), fullfile(SvFolderLoc,'Total Data Aqcuisation Screen Shot'), 'png')
-    % Saving Comments Txt file
-    fprintf
+  
     % Print Folder Location confirmation to command line
     fprintf('\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! \n')
     fprintf('Folder: "C:.../%s" was NOT found in directory, so a new folder: "%s" was created! \n',...

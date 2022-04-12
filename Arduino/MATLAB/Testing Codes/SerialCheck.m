@@ -1,4 +1,4 @@
-% Close all open figures
+ % Close all open figures
 clear all 
 clear;clc;
 close ALL 
