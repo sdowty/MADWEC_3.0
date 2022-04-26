@@ -62,8 +62,10 @@ void loop()
 
 
   
- Serial.print(current);
-// Serial.print(":");
+ Serial.println(current);
+ Serial.print(":");
+ Serial.print(voltage);
+ 
 
 
  
